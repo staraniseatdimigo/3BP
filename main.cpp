@@ -109,7 +109,8 @@ void loop() {
 				if(planets[i]->r + planets[j]->r <= Vec3::length(planets[i]->p - planets[j]->p))
 				{
 				    //collision detected
-
+					// collision logic
+					continue;
 				}
 			}
 		}
