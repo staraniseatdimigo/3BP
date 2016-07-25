@@ -110,7 +110,7 @@ void loop() {
 				{
 				    //collision detected
 					// collision logic
-					continue;
+					
 				}
 			}
 		}
