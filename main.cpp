@@ -132,6 +132,7 @@ public:
 void loop(Result *R) {
 	double currentTime = 0.0;
 	int i, j;
+	Vec3 c_mass;
 
 	/* Backup Initial Status */
 	R->T.init(planets);
@@ -171,6 +172,16 @@ void loop(Result *R) {
 		for(i=0;i<PLANET_N;i++) {
 			planets[i]->apply(timestamp);
 		}
+		
+		/* adjusting to center of mass */
+		for(i=0;i<PLANET_N;i++) {
+			c_mass += planets[i]->mass * planets[i]->p;
+		}
+		
+		for(i=0;i<PLANET_N;i++) {
+			planets[i]->p = planets[i]->p - c_mass;
+		}
+		
 
 		/* Time is gone */
 		currentTime += timestamp;
