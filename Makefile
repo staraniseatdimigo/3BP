@@ -3,6 +3,7 @@ OUT = out
 
 all: $(OBJS)
 	g++ $(OBJS) -o $(OUT)
+	g++ multi.cpp -o multi
 
 %.o: %.cpp
 	g++ -c $^ -o $@
