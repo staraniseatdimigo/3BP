@@ -9,6 +9,7 @@
 
 using namespace Phi;
 
+/* Gravity Constant */
 #define G 1
 
 class Planet {
@@ -17,7 +18,14 @@ public:
 	double r;
 	Vec3 p, v;
 
-	Vec3 temp_force;
+	Vec3 tempForce;
+
+	Planet(Planet *other) {
+		mass = other->mass;
+		r = other->r;
+		p = other->p;
+		v = other->v;
+	}
 
 	Planet(double _mass, double _r, Vec3 _p, Vec3 _v) {
 		mass = _mass;
@@ -30,7 +38,7 @@ public:
 	}
 
 	void initializeTempForce() {
-		temp_force(0, 0, 0);
+		tempForce(0, 0, 0);
 	}
 
 	void calculateTempForce(Planet *other, double timestamp) {
@@ -40,33 +48,38 @@ public:
 		double m = other->mass * G;
 		double fa = m / (dist * dist);
 		dir *= fa;
-		temp_force += dir;
+		tempForce += dir;
 	}
 
 	void apply(double timestamp) {
-		v += temp_force * timestamp;
+		v += tempForce * timestamp;
 		p += v * timestamp;
+	}
+
+	bool isCollided(Planet *other) {
+		double distance = (this->p - other->p).length();
+		double radiusSum = this->r + other->r;
+		return distance <= radiusSum;
 	}
 };
 
 #define PLANET_N 3
 #define timestamp 1.0
+#define timeout 10000000.0
 
 Planet *planets[PLANET_N];
 
-// Class added /////////////////////////////////////////////////////
 
 class Experiment {
 public:
-    int[4] exGroup; // 실험그룹
+    int exGroup[4]; // 실험그룹
     double dT;          // dT
     // 물리량 허용범위(질량, 초기위치, 반지름, 초기속도) + 추가바람
-    // 가동시작시각(외부) 리눅스 코드 + 추가바람
     double T; // 소요시간
     double GT; // 그룹당 시간
     double unitT; // 1단위당 시간
     double maxT; // 안정판단한계시간
-    char[15] drafter; // 작성자?
+    char drafter[15]; // 작성자?
 };
 
 class Try {
@@ -78,77 +91,122 @@ public:
     Vec3 boonpoP;
     Vec3 boonpoV;
     */
+
+	void init(Planet **P) {
+		for(int i=0;i<PLANET_N;i++) {
+			this->planets[i] = new Planet(P[i]);
+		}
+	}
+};
+
+class CollisionResult {
+public:
+    int cdPair[2];
+    double cdTime; // 기준 - 시작 실험 시각(외부 시각이 아님)
+    Vec3 cdPoint; // 이건 고민좀
+
+    CollisionResult(int _cdPair[], double _cdTime, Vec3 _cdPoint) {
+        cdPair[0] = _cdPair[0];
+		cdPair[1] = _cdPair[1];
+        cdTime = _cdTime;
+        cdPoint = _cdPoint;
+    }
 };
 
 class Result {
 public:
-    bool iscollided;
-    int[2] cdPair;
-    double cdTime; // 기준 - 시작 실험 시각(외부 시각이 아님)
-    double[3] cdPoint; // 이거 좀 수정해줘라 충돌위치
+	Experiment E;
+	Try T;
 
-    public Result(bool _iscollided, int[2] _cdPair, double _cdTime, double[3] _cdPoint) {
-        iscollided = _iscollided;
-        cdPair = _cdPair
-        cdTime = _cdTime;
-        cdPoint = _cdPoint;
-    }
+	/* If CollisionResult == NULL, No Collision */
+	CollisionResult *C;
 
+	Result()
+		: E(), T() {
+		C = NULL;
+	}
 };
 
-////////////////////////////////////////////////////////////////////////
 
-void loop() {
-	int running = 1;
+/* Main Logic */
+void loop(Result *R) {
+	double currentTime = 0.0;
 	int i, j;
-	while(running) {
 
-            // collision detection
+	/* Backup Initial Status */
+	R->T.init(planets);
+
+	/* Main Loop */
+	while(currentTime < timeout) {
+		/* Check Collision Detection */
         for(i=1;i<PLANET_N;i++) {
 			for(j=0;j<i;j++) {
-				if(planets[i]->r + planets[j]->r <= Vec3::length(planets[i]->p - planets[j]->p))
-				{
-				    //collision detected
-					// collision logic
+				if(planets[i]->isCollided(planets[j])) {
+					/* Is Collided */
+					/* Write Collided Result */
+					int cdPair[] = {i, j};
+					Vec3 cp;
+					R->C = new CollisionResult(cdPair, currentTime, cp);
 					
+					/* Forced End Loop */
+					goto LOOP_END;
 				}
 			}
 		}
 
-        // Initialize
+        /* Initialize */
 		for(i=0;i<PLANET_N;i++) {
 			planets[i]->initializeTempForce();
 		}
-		// Calculation
+		
+		/* Calculation */
 		for(i=1;i<PLANET_N;i++) {
 			for(j=0;j<i;j++) {
 				planets[i]->calculateTempForce(planets[j], timestamp);
 				planets[j]->calculateTempForce(planets[i], timestamp);
 			}
 		}
-		// Render
+		
+		/* Update Status */
 		for(i=0;i<PLANET_N;i++) {
 			planets[i]->apply(timestamp);
 		}
+
+		/* Time is gone */
+		currentTime += timestamp;
 	}
+
+	/* Finalize */
+LOOP_END:
 }
 
-void input() {
+
+
+/* Initialize Experiment */
+void initExp(Result *R) {
+	
+}
+
+/* Get Initial Value from STDIN */
+void input(Result *R) {
 	int i;
-	double mass;
+	double mass, radius;
 	Vec3 p, v;
 
 	FILE *f = stdin;
 	for(i=0;i<3;i++) {
-		fscanf(stdin, "%lf", &mass);
+		fscanf(stdin, "%lf %lf", &mass, &radius);
 		fscanf(stdin, "%lf %lf %lf", &p.x, &p.y, &p.z);
 		fscanf(stdin, "%lf %lf %lf", &v.x, &v.y, &v.z);
-		planets[i] = new Planet(mass, p, v);
+		planets[i] = new Planet(mass, radius, p, v);
 	}
 }
 
 int main() {
-	loop();
+	Result r;
+	initExp(&r);
+	input(&r);
+	loop(&r);
 	return 0;
 }
 
