@@ -147,7 +147,7 @@ void loop(Result *R) {
 	Vec3 c_mass;
 
 	/* Backup Initial Status */
-	R->T.init(planets);
+	// R->T.init(planets);
 
 	/* Main Loop */
 	while(currentTime < timeout) {
@@ -207,7 +207,14 @@ LOOP_END:
 
 /* Initialize Experiment */
 void initExp(Result *R) {
+	fscanf(stdin, "%lf", &(R->E.dT));
+	fscanf(stdin, "%lf %lf %lf %lf", &(R->E.mLimit), &(R->E.pLimit), &(R->E.vLimit), &(R->E.rLimit));
+	fscanf(stdin, "%lf %lf %lf %lf", &(R->E.rStep), &(R->E.pStep), &(R->E.mStep), &(R->E.vStep));
+	fscanf(stdin, "%lf", &(R->E.maxT));
+	fscanf(stdin, "%s", R->E.drafter);
 	
+	// I think it'd be better to make a file that can save E datas so that we can manage it easily.
+	// Oh, I want to write in Korean. But it's github.한한국한국었한국어쓱한국어쓰곳한국어쓰고싶한국어쓰고싶다
 }
 
 /* Get Initial Value from STDIN */
@@ -228,8 +235,20 @@ void input(Result *R) {
 int main() {
 	Result r;
 	initExp(&r);
-	input(&r);
-	loop(&r);
+	// input(&r);
+	
+	// planets initialization
+	/*
+	for(i=0;i<PLANET_N;i++)
+		for(0.1 ~ mLimit ~ mStep)
+		for(0.1 ~ rLimit ~ rStep)
+		for(-pLimit ~ pLimit ~ pStep)
+		for(-vLimit ~ vLimit ~ vStep)
+	
+		r.T.init(planets);
+		loop(&r);
+	*/
+		
 	return 0;
 }
 
