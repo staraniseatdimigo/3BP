@@ -1,6 +1,7 @@
 /* IGRam-1Gst */
 /* JinEunpa */
 /* 2016-07-25 PM 21:02 */
+
 #include "phi_math.h"
 #include "phi_type.h"
 
@@ -178,6 +179,7 @@ void loop(Result *R) {
 
 	/* Finalize */
 LOOP_END:
+	;
 }
 
 
@@ -202,11 +204,16 @@ void input(Result *R) {
 	}
 }
 
+void writeResult(Result *R) {
+	
+}
+
 int main() {
 	Result r;
 	initExp(&r);
 	input(&r);
 	loop(&r);
+	writeResult(&r);
 	return 0;
 }
 
