@@ -74,7 +74,19 @@ class Experiment {
 public:
     int exGroup[4]; // 실험그룹
     double dT;          // dT
-    // 물리량 허용범위(질량, 초기위치, 반지름, 초기속도) + 추가바람
+    // 물리량 허용범위
+    
+    double mLimit;
+    Vec3 pLimit;
+    Vec3 vLimit;
+    double rLimit;
+    
+    // interval of initial condition
+    double rStep;
+    double pStep;
+    double mStep;
+    double vStep;
+    
     double T; // 소요시간
     double GT; // 그룹당 시간
     double unitT; // 1단위당 시간
