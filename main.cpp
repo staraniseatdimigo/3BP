@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <conio.h>
 
 using namespace Phi;
 
@@ -230,8 +231,21 @@ void initExp(Result *R, FILE *F) {
 
 
 void writeResult(Result *R, FILE *f) {
-	/* Write Result File */
-	/* 이은찬 니가 여기 짜 */
+	
+	static unsigned long long rnum = 0;
+	char filename[50];
+	
+	sprintf(filename, "%x", rnum);
+	
+	f = fopen(filename, "w");
+	fprintf(f, "%d-%d-%d-%d", R->E.exGroup[0], R->E.exGroup[1], R->E.exGroup[2], R->E.exGroup[3]);
+	fprintf(f, "%lf %lf %lf %lf %s", R->E.dT, R->E.T, R->E.GT, R->E.unitT, R->E.maxT, R->E.drafter);
+	for(i=0;i<PLANET_N;i++) 
+		fprintf(f, "%lf %lf", R->T.planets[i].mass, R->T.planets[i].r);
+	fprintf(f, "")
+	
+	fclose(f);
+	rnum++;
 }
 
 int main(int argc, char **argv) {
