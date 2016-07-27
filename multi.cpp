@@ -53,6 +53,13 @@ void randomInput(FILE *F) {
 	fprintf(F, "%lf\n", timestamp);
 	/* timeout */
 	fprintf(F, "%lf\n", timeout);
+
+	/* Limit */
+	for(i=0;i<4;i++) {
+		fprintf(F, "%lf ", 100000.0);
+	}
+	fprintf(F, "\n");
+	
 	/* planets */
 	for(i=0;i<3;i++) {
 		/* radius */

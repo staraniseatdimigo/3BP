@@ -64,8 +64,6 @@ public:
 };
 
 #define PLANET_N 3
-#define timestamp 1.0
-#define timeout 10000000.0
 
 Planet *planets[PLANET_N];
 
@@ -77,16 +75,10 @@ public:
     // 물리량 허용범위
     
     double mLimit;
-    Vec3 pLimit;
-    Vec3 vLimit;
+    double pLimit;
+    double vLimit;
     double rLimit;
-    
-    // interval of initial condition
-    double rStep;
-    double pStep;
-    double mStep;
-    double vStep;
-    
+	
     double T; // 소요시간
     double GT; // 그룹당 시간
     double unitT; // 1단위당 시간
@@ -146,6 +138,9 @@ void loop(Result *R) {
 	int i, j;
 	Vec3 c_mass;
 
+	double timestamp = R->E.dT;
+	double timeout = R->E.maxT;
+
 	/* Backup Initial Status */
 	// R->T.init(planets);
 
@@ -187,13 +182,16 @@ void loop(Result *R) {
 		
 		/* adjusting to center of mass */
 		for(i=0;i<PLANET_N;i++) {
-			c_mass += planets[i]->mass * planets[i]->p;
+			c_mass += planets[i]->p * planets[i]->mass;
 		}
 		
 		for(i=0;i<PLANET_N;i++) {
 			planets[i]->p = planets[i]->p - c_mass;
 		}
-		
+
+		/* Check Velocity Limit */
+		for(i=0;i<PLANET_N;i++) {
+		}
 
 		/* Time is gone */
 		currentTime += timestamp;
@@ -201,54 +199,66 @@ void loop(Result *R) {
 
 	/* Finalize */
 LOOP_END:
+	;
 }
 
 
 
 /* Initialize Experiment */
-void initExp(Result *R) {
-	fscanf(stdin, "%lf", &(R->E.dT));
-	fscanf(stdin, "%lf %lf %lf %lf", &(R->E.mLimit), &(R->E.pLimit), &(R->E.vLimit), &(R->E.rLimit));
-	fscanf(stdin, "%lf %lf %lf %lf", &(R->E.rStep), &(R->E.pStep), &(R->E.mStep), &(R->E.vStep));
-	fscanf(stdin, "%lf", &(R->E.maxT));
-	fscanf(stdin, "%s", R->E.drafter);
+void initExp(Result *R, FILE *F) {
+	fscanf(F, "%s", R->E.drafter);
+	fscanf(F, "%lf", &(R->E.dT));
+	fscanf(F, "%lf", &(R->E.maxT));
+	fscanf(F, "%lf %lf %lf %lf", &(R->E.mLimit), &(R->E.pLimit), &(R->E.vLimit), &(R->E.rLimit));
+
+	{
+		int i;
+		double mass, radius;
+		Vec3 p, v;
+		for(i=0;i<3;i++) {
+			fscanf(F, "%lf %lf", &mass, &radius);
+			fscanf(F, "%lf %lf %lf", &p.x, &p.y, &p.z);
+			fscanf(F, "%lf %lf %lf", &v.x, &v.y, &v.z);
+			planets[i] = new Planet(mass, radius, p, v);
+		}
+	}
 	
 	// I think it'd be better to make a file that can save E datas so that we can manage it easily.
 	// Oh, I want to write in Korean. But it's github.한한국한국었한국어쓱한국어쓰곳한국어쓰고싶한국어쓰고싶다
+	// 한국어 써 누가 쓰지 말래?
 }
 
-/* Get Initial Value from STDIN */
-void input(Result *R) {
-	int i;
-	double mass, radius;
-	Vec3 p, v;
 
-	FILE *f = stdin;
-	for(i=0;i<3;i++) {
-		fscanf(stdin, "%lf %lf", &mass, &radius);
-		fscanf(stdin, "%lf %lf %lf", &p.x, &p.y, &p.z);
-		fscanf(stdin, "%lf %lf %lf", &v.x, &v.y, &v.z);
-		planets[i] = new Planet(mass, radius, p, v);
+void writeResult(Result *R, FILE *f) {
+	/* Write Result File */
+	/* 이은찬 니가 여기 짜 */
+}
+
+int main(int argc, char **argv) {
+	if(argc < 3) {
+		fprintf(stderr, "Usage: %s IN_FILE_NAME OUT_FILE_NAME\n", argv[0]);
+		return 0;
 	}
-}
-
-int main() {
+	
 	Result r;
-	initExp(&r);
-	// input(&r);
-	
-	// planets initialization
-	/*
-	for(i=0;i<PLANET_N;i++)
-		for(0.1 ~ mLimit ~ mStep)
-		for(0.1 ~ rLimit ~ rStep)
-		for(-pLimit ~ pLimit ~ pStep)
-		for(-vLimit ~ vLimit ~ vStep)
-	
-		r.T.init(planets);
-		loop(&r);
-	*/
-		
+	FILE *f;
+
+	fprintf(stderr, "%s: READ\n", argv[1]);
+
+	/* Load Input Set */
+	f = fopen(argv[1], "r");
+	initExp(&r, f);
+	fclose(f);
+
+	fprintf(stderr, "%s: RUN\n", argv[1]);
+	/* Run */
+	loop(&r);
+
+	fprintf(stderr, "%s: OUTPUT(%s)\n", argv[1], argv[2]);
+	/* Output Result */
+	f = fopen(argv[2], "w");
+	writeResult(&r, f);
+	fclose(f);
 	return 0;
 }
 
