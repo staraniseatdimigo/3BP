@@ -232,12 +232,12 @@ void initExp(Result *R, FILE *F) {
 
 void writeResult(Result *R, FILE *f) {
 	
-	static unsigned long long rnum = 0;
-	char filename[50];
+	//static unsigned long long rnum = 0;
+	//char filename[50];
 	
-	sprintf(filename, "%x", rnum);
+	//sprintf(filename, "%x", rnum);
 	
-	f = fopen(filename, "w");
+	//f = fopen(filename, "w");
 	
 	// output
 	fprintf(f, "%d-%d-%d-%d", R->E.exGroup[0], R->E.exGroup[1], R->E.exGroup[2], R->E.exGroup[3]);
@@ -252,7 +252,6 @@ void writeResult(Result *R, FILE *f) {
 	fprintf(f, "%lf", R->C->cdTime);
 	fprintf(f, "%lf %lf %lf", R->C->cdPoint.x, R->C->cdPoint.y, R->C->cdPoint.z);
 	
-	fclose(f);
 	rnum++;
 }
 
