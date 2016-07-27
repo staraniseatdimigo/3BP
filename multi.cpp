@@ -80,7 +80,7 @@ void randomInput(FILE *F) {
 void newProcess(int index) {
 	pid_t pid;
 	char buf_in[512];
-	sprintf(buf_in, "%s%lld", input_prefix, exp_num);
+	sprintf(buf_in, "%s%llx", input_prefix, exp_num);
 
 	/* Set Input File */
 	FILE *input = fopen(buf_in, "w");
@@ -91,7 +91,7 @@ void newProcess(int index) {
 	if(pid == -1) return;
 	else if(pid == 0) { /* Child */
 		char buf_out[512];
-		sprintf(buf_out, "%s%lld.out", output_prefix, exp_num);
+		sprintf(buf_out, "%s%llx.out", output_prefix, exp_num);
 		int result = execl(ex_path, ex_path, buf_in, buf_out, NULL);
 		printf("%d\n", result);
 	} else { /* Parent */
