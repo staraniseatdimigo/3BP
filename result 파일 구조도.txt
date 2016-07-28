@@ -6,15 +6,20 @@ Result 파일 설명서
 
 %d-%d-%d-%d 		실험그룹번호 (ex 1-3-25-34221)
 %lf %lf %lf %lf %s	dT 소요시간 그룹시간 단위당시간 안정판단한계시간 작성자
-%lf %lf			1질량 1반지름
+%lf %lf			1질량 3반지름
 %lf %lf %lf		1위치 순서대로(x, y, z)
 %lf %lf %lf		1속도 순서대로(x, y, z)
-%lf %lf			2질량 2반지름
+%lf %lf			2질량 3반지름
 %lf %lf %lf		2위치 순서대로(x, y, z)
 %lf %lf %lf		2속도 순서대로(x, y, z)
 %lf %lf			3질량 3반지름
 %lf %lf %lf		3위치 순서대로(x, y, z)
 %lf %lf %lf		3속도 순서대로(x, y, z)
+
+(if there was no collision)
+NULL
+
+(else)
 %d-%d			충돌쌍 (1-0, 2-0, 2-1 셋중 하나)
 %lf			충돌시간(시작 후)
 %lf %lf %lf		충돌위치 순서대로(x, y, z)
