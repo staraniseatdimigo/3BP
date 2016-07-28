@@ -249,11 +249,14 @@ void writeResult(Result *R, FILE *f) {
 		fprintf(f, "%lf %lf %lf", R->T.planets[i].v.x,  R->T.planets[i].v.y,  R->T.planets[i].v.z);
 	}
 	
-	fprintf(f, "%d-%d", R->C->cdPair[0], R->C->cdPair[1]);
-	fprintf(f, "%lf", R->C->cdTime);
-	fprintf(f, "%lf %lf %lf", R->C->cdPoint.x, R->C->cdPoint.y, R->C->cdPoint.z);
-	
-	rnum++;
+	if(R->C == NULL)
+		fprintf(f, "NULL");
+	else {
+		fprintf(f, "%d-%d", R->C->cdPair[0], R->C->cdPair[1]);
+		fprintf(f, "%lf", R->C->cdTime);
+		fprintf(f, "%lf %lf %lf", R->C->cdPoint.x, R->C->cdPoint.y, R->C->cdPoint.z);
+	}
+	//rnum++;
 }
 
 int main(int argc, char **argv) {
