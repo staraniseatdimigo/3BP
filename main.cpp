@@ -79,6 +79,7 @@ public:
     double pLimit;
     double vLimit;
     double rLimit;
+    double thLimit;
 	
     double T; // 소요시간
     double GT; // 그룹당 시간
@@ -210,7 +211,7 @@ void initExp(Result *R, FILE *F) {
 	fscanf(F, "%s", R->E.drafter);
 	fscanf(F, "%lf", &(R->E.dT));
 	fscanf(F, "%lf", &(R->E.maxT));
-	fscanf(F, "%lf %lf %lf %lf", &(R->E.mLimit), &(R->E.pLimit), &(R->E.vLimit), &(R->E.rLimit));
+	fscanf(F, "%lf %lf %lf %lf lf", &(R->E.mLimit), &(R->E.pLimit), &(R->E.vLimit), &(R->E.rLimit), &(R->E.thLimit));
 
 	{
 		int i;
