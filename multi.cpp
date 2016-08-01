@@ -89,9 +89,9 @@ struct Planet {
 		v.y = CAL_V(M, v2n);
 		v.z = CAL_V(M, v3n);
 		switch(index) {
-		case 0: p.x = 10.0; p.y = 10.0; p.z = 10.0;
-		case 1: p.x = -10.0; p.y = 10.0; p.z = 10.0;
-		case 2: p.x = 10.0; p.y = 10.0; p.z = -10.0;
+		case 0: p.x = 10.0; p.y = 10.0; p.z = 10.0; break;
+		case 1: p.x = -10.0; p.y = 10.0; p.z = 10.0; break;
+		case 2: p.x = 10.0; p.y = 10.0; p.z = -10.0; break;
 		}
 	}
 

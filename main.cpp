@@ -10,7 +10,7 @@
 using namespace Phi;
 
 /* Gravity Constant */
-#define G 1
+#define G 1.0
 
 class Planet {
 public:
@@ -138,6 +138,7 @@ void loop(Result *R) {
 	double currentTime = 0.0;
 	int i, j;
 	Vec3 c_mass;
+	double s_mass;
 
 	double timestamp = R->E.dT;
 	double timeout = R->E.maxT;
@@ -182,9 +183,13 @@ void loop(Result *R) {
 		}
 		
 		/* adjusting to center of mass */
+		s_mass = 0;
+		c_mass(0, 0, 0);
 		for(i=0;i<PLANET_N;i++) {
+			s_mass += planets[i]->mass;
 			c_mass += planets[i]->p * planets[i]->mass;
 		}
+		c_mass /= s_mass;
 		
 		for(i=0;i<PLANET_N;i++) {
 			planets[i]->p = planets[i]->p - c_mass;
