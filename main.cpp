@@ -281,7 +281,7 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr, "%s: OUTPUT(%s)\n", argv[1], argv[2]);
 	/* Output Result */
-	f = fopen(argv[2], "w");
+	f = fopen(argv[2], "wb");
 	writeResult(&r, f);
 	fclose(f);
 	return 0;
