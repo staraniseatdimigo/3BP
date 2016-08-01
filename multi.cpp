@@ -14,6 +14,29 @@
 using namespace Phi;
 
 
+/* Limit and Step */
+/* mass */
+#define M_MIN 1.0
+#define M_MAX 3.0
+#define M_STEP 1.0
+/* radius */
+#define R_MIN 1.0
+#define R_MAX 3.0
+#define R_STEP 1.0
+/* Velocity */
+#define V_MIN 1.0
+#define V_MAX 3.0
+#define V_STEP 1.0
+
+#define CAL_N(X) ((X##_MAX - X##_MIN) / X##_STEP)
+#define CAL_V(X, N) ((X##_MAX - X##_MIN) / X##_STEP * N + X##_MIN)
+
+const long long int M_N = CAL_N(M);
+const long long int R_N = CAL_N(R);
+const long long int V_N = CAL_N(V);
+const long long int CN = M_N * R_N * V_N * V_N * V_N;
+
+
 char drafter[256];
 
 /* Simultion Program Path */
@@ -45,10 +68,49 @@ double randDouble(double min, double max) {
 	return dv;
 }
 
+struct Planet {
+	double r, m;
+	Vec3 p, v;
+	
+	Planet() {
+		
+	}
+
+	Planet(int index, long long int num) {
+		int mn = num % M_N; num /= M_N;
+		int rn = num % R_N; num /= R_N;
+		int v1n = num % V_N; num /= V_N;
+		int v2n = num % V_N; num /= V_N;
+		int v3n = num % V_N; num /= V_N;
+
+		m = CAL_V(M, mn);
+		r = CAL_V(M, rn);
+		v.x = CAL_V(M, v1n);
+		v.y = CAL_V(M, v2n);
+		v.z = CAL_V(M, v3n);
+		switch(index) {
+		case 0: p.x = 10.0; p.y = 10.0; p.z = 10.0;
+		case 1: p.x = -10.0; p.y = 10.0; p.z = 10.0;
+		case 2: p.x = 10.0; p.y = 10.0; p.z = -10.0;
+		}
+	}
+
+	void write(FILE *F) {
+		/* radius */
+		fprintf(F, "%lf\n", r);
+		/* mass */
+		fprintf(F, "%lf\n", m);
+		/* Position */
+		fprintf(F, "%lf %lf %lf\n", p.x, p.y, p.z);
+		/* Velocity */
+		fprintf(F, "%lf %lf %lf\n", v.x, v.y, v.z);
+	}
+};
+
 void randomInput(FILE *F) {
 	int i, j;
 	/* drafter */
-	drafter = "LEE H.G / LEE E.C";
+	
 	fprintf(F, "%s\n", drafter);
 	/* timestamp */
 	fprintf(F, "%lf\n", timestamp);
@@ -60,28 +122,24 @@ void randomInput(FILE *F) {
 		fprintf(F, "%lf ", 100000.0);
 	}
 	fprintf(F, "\n");
+
+	
+
+	Planet p[3];
+	p[0] = Planet(0, exp_num % CN);
+	p[1] = Planet(1, (exp_num / CN) % CN);
+	p[2] = Planet(2, (exp_num / (CN * CN)) % CN);
 	
 	/* planets */
 	for(i=0;i<3;i++) {
-		/* radius */
-		fprintf(F, "%lf\n", randDouble(0.1, 20.0));
-		/* mass */
-		fprintf(F, "%lf\n", randDouble(1.0, 1000.0));
-		/* Position */
-		for(j=0;j<3;j++)
-			fprintf(F, "%lf ", randDouble(-1000.0, 1000.0));
-		fprintf(F, "\n");
-		/* Velocity */
-		for(j=0;j<3;j++)
-			fprintf(F, "%lf ", randDouble(-100.0, 100.0));
-		fprintf(F, "\n");
+		p[i].write(F);
 	}
 }
 
 void newProcess(int index) {
 	pid_t pid;
 	char buf_in[512];
-	sprintf(buf_in, "%s%llx", input_prefix, exp_num);
+	sprintf(buf_in, "%s%016llx", input_prefix, exp_num);
 
 	/* Set Input File */
 	FILE *input = fopen(buf_in, "w");
@@ -92,7 +150,7 @@ void newProcess(int index) {
 	if(pid == -1) return;
 	else if(pid == 0) { /* Child */
 		char buf_out[512];
-		sprintf(buf_out, "%s%llx.out", output_prefix, exp_num);
+		sprintf(buf_out, "%s%016llx.out", output_prefix, exp_num);
 		int result = execl(ex_path, ex_path, buf_in, buf_out, NULL);
 		printf("%d\n", result);
 	} else { /* Parent */
@@ -103,7 +161,7 @@ void newProcess(int index) {
 
 void deadProcess(int index) {
 	char buf_in[512];
-	sprintf(buf_in, "%s%lld", input_prefix, p[index].exp_num);
+	sprintf(buf_in, "%s%016llx", input_prefix, p[index].exp_num);
 	remove(buf_in);
 	
 	p[index].pid = -1;

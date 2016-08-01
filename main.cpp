@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <conio.h>
 
 using namespace Phi;
 
@@ -208,12 +207,10 @@ LOOP_END:
 
 /* Initialize Experiment */
 void initExp(Result *R, FILE *F) {
-	
-	
 	fscanf(F, "%s", R->E.drafter);
 	fscanf(F, "%lf", &(R->E.dT));
 	fscanf(F, "%lf", &(R->E.maxT));
-	fscanf(F, "%lf %lf %lf %lf lf", &(R->E.mLimit), &(R->E.pLimit), &(R->E.vLimit), &(R->E.rLimit), &(R->E.thLimit));
+	fscanf(F, "%lf %lf %lf %lf %lf", &(R->E.mLimit), &(R->E.pLimit), &(R->E.vLimit), &(R->E.rLimit), &(R->E.thLimit));
 
 	{
 		int i;
@@ -224,16 +221,18 @@ void initExp(Result *R, FILE *F) {
 			fscanf(F, "%lf %lf %lf", &p.x, &p.y, &p.z);
 			fscanf(F, "%lf %lf %lf", &v.x, &v.y, &v.z);
 			planets[i] = new Planet(mass, radius, p, v);
+			R->T.planets[i] = new Planet(mass, radius, p, v);
 		}
 	}
+}
 	
 	// I think it'd be better to make a file that can save E datas so that we can manage it easily.
 	// Oh, I want to write in Korean. But it's github.한한국한국었한국어쓱한국어쓰곳한국어쓰고싶한국어쓰고싶다
-	// 한국어 써 누가 쓰지 말래?
-}
+	// 한국어 써 누가 쓰지 말래?}
 
 
 void writeResult(Result *R, FILE *f) {
+	int i;
 	
 	//static unsigned long long rnum = 0;
 	//char filename[50];
@@ -249,20 +248,20 @@ void writeResult(Result *R, FILE *f) {
 	*/
 	for(i=0;i<PLANET_N;i++) {
 		//fprintf(f, "%lf %lf", R->T.planets[i].mass, R->T.planets[i].r);
-		fwrite((void *)&(R->T.planets[i].mass), sizeof(double), 1, f);
-		fwrite((void *)&(R->T.planets[i].r), sizeof(double), 1, f);
-		//fprintf(f, "%lf %lf %lf", R->T.planets[i].p.x,  R->T.planets[i].p.y,  R->T.planets[i].p.z);
-		//fprintf(f, "%lf %lf %lf", R->T.planets[i].v.x,  R->T.planets[i].v.y,  R->T.planets[i].v.z
-		fwrite((void *)&(R->T.planets[i].p.x), sizeof(double), 1, f);
-		fwrite((void *)&(R->T.planets[i].p.y), sizeof(double), 1, f);
-		fwrite((void *)&(R->T.planets[i].p.z), sizeof(double), 1, f);
-		fwrite((void *)&(R->T.planets[i].v.x), sizeof(double), 1, f);
-		fwrite((void *)&(R->T.planets[i].v.y), sizeof(double), 1, f);
-		fwrite((void *)&(R->T.planets[i].v.z), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i]->mass), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i]->r), sizeof(double), 1, f);
+		//fprintf(f, "%lf %lf %lf", R->T.planets[i]->p.x,  R->T.planets[i]->p.y,  R->T.planets[i]->p.z);
+		//fprintf(f, "%lf %lf %lf", R->T.planets[i]->v.x,  R->T.planets[i]->v.y,  R->T.planets[i]->v.z
+		fwrite((void *)&(R->T.planets[i]->p.x), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i]->p.y), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i]->p.z), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i]->v.x), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i]->v.y), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i]->v.z), sizeof(double), 1, f);
 	}
 	
 	if(R->C == NULL)
-		fprintf((void *)"NULL", sizeof(char), 5, f);
+		fwrite((void *)"NULL", sizeof(char), 5, f);
 	else {
 		//fprintf(f, "%d-%d", R->C->cdPair[0], R->C->cdPair[1]);
 		//fprintf(f, "%lf", R->C->cdTime);
@@ -298,7 +297,7 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr, "%s: OUTPUT(%s)\n", argv[1], argv[2]);
 	/* Output Result */
-	f = fopen(argv[2], "wb");
+	f = fopen(argv[2], "w");
 	writeResult(&r, f);
 	fclose(f);
 	return 0;
