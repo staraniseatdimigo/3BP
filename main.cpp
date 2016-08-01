@@ -208,6 +208,8 @@ LOOP_END:
 
 /* Initialize Experiment */
 void initExp(Result *R, FILE *F) {
+	
+	
 	fscanf(F, "%s", R->E.drafter);
 	fscanf(F, "%lf", &(R->E.dT));
 	fscanf(F, "%lf", &(R->E.maxT));
@@ -241,8 +243,10 @@ void writeResult(Result *R, FILE *f) {
 	//f = fopen(filename, "w");
 	
 	// output
+	/*
 	fprintf(f, "%d-%d-%d-%d", R->E.exGroup[0], R->E.exGroup[1], R->E.exGroup[2], R->E.exGroup[3]);
 	fprintf(f, "%lf %lf %lf %lf %s", R->E.dT, R->E.T, R->E.GT, R->E.unitT, R->E.maxT, R->E.drafter);
+	*/
 	for(i=0;i<PLANET_N;i++) {
 		fprintf(f, "%lf %lf", R->T.planets[i].mass, R->T.planets[i].r);
 		fprintf(f, "%lf %lf %lf", R->T.planets[i].p.x,  R->T.planets[i].p.y,  R->T.planets[i].p.z);
