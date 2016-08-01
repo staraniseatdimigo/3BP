@@ -249,29 +249,29 @@ void writeResult(Result *R, FILE *f) {
 	*/
 	for(i=0;i<PLANET_N;i++) {
 		//fprintf(f, "%lf %lf", R->T.planets[i].mass, R->T.planets[i].r);
-		fwrite((void *)&R->T.planets[i].mass, sizeof(double), 1, f);
-		fwrite((void *)&R->T.planets[i].r, sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].mass), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].r), sizeof(double), 1, f);
 		//fprintf(f, "%lf %lf %lf", R->T.planets[i].p.x,  R->T.planets[i].p.y,  R->T.planets[i].p.z);
 		//fprintf(f, "%lf %lf %lf", R->T.planets[i].v.x,  R->T.planets[i].v.y,  R->T.planets[i].v.z
-		fwrite((void *)&R->T.planets[i].p.x, sizeof(double), 1, f);
-		fwrite((void *)&R->T.planets[i].p.y, sizeof(double), 1, f);
-		fwrite((void *)&R->T.planets[i].p.z, sizeof(double), 1, f);
-		fwrite((void *)&R->T.planets[i].v.x, sizeof(double), 1, f);
-		fwrite((void *)&R->T.planets[i].v.y, sizeof(double), 1, f);
-		fwrite((void *)&R->T.planets[i].v.z, sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].p.x), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].p.y), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].p.z), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].v.x), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].v.y), sizeof(double), 1, f);
+		fwrite((void *)&(R->T.planets[i].v.z), sizeof(double), 1, f);
 	}
 	
 	if(R->C == NULL)
-		fprintf(f, "NULL");
+		fprintf((void *)"NULL", sizeof(char), 5, f);
 	else {
-		fprintf(f, "%d-%d", R->C->cdPair[0], R->C->cdPair[1]);
-		fprintf(f, "%lf", R->C->cdTime);
-		fprintf(f, "%lf %lf %lf", R->C->cdPoint.x, R->C->cdPoint.y, R->C->cdPoint.z);
-		fwrite((void *)&R->C->cdPair, sizeof(int), 2, f);
-		fwrite((void *)&R->C->cdTime, sizeof(double), 1, f);
-		fwrite((void *)&R->C->cdPoint.x, sizeof(double), 1, f);
-		fwrite((void *)&R->C->cdPoint.y, sizeof(double), 1, f);
-		fwrite((void *)&R->C->cdPoint.z, sizeof(double), 1, f);
+		//fprintf(f, "%d-%d", R->C->cdPair[0], R->C->cdPair[1]);
+		//fprintf(f, "%lf", R->C->cdTime);
+		//fprintf(f, "%lf %lf %lf", R->C->cdPoint.x, R->C->cdPoint.y, R->C->cdPoint.z);
+		fwrite((void *)&(R->C->cdPair), sizeof(int), 2, f);
+		fwrite((void *)&(R->C->cdTime), sizeof(double), 1, f);
+		fwrite((void *)&(R->C->cdPoint.x), sizeof(double), 1, f);
+		fwrite((void *)&(R->C->cdPoint.y), sizeof(double), 1, f);
+		fwrite((void *)&(R->C->cdPoint.z), sizeof(double), 1, f);
 	}
 	//rnum++;
 }
