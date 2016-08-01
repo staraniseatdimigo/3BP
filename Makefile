@@ -1,4 +1,4 @@
-COPT = -g
+COPT = -O2
 
 OBJS = main.o phi_math.o phi_type.o
 OUT = out
