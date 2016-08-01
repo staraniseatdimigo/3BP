@@ -48,6 +48,7 @@ double randDouble(double min, double max) {
 void randomInput(FILE *F) {
 	int i, j;
 	/* drafter */
+	drafter = "LEE H.G / LEE E.C";
 	fprintf(F, "%s\n", drafter);
 	/* timestamp */
 	fprintf(F, "%lf\n", timestamp);
@@ -55,7 +56,7 @@ void randomInput(FILE *F) {
 	fprintf(F, "%lf\n", timeout);
 
 	/* Limit */
-	for(i=0;i<4;i++) {
+	for(i=0;i<5;i++) {
 		fprintf(F, "%lf ", 100000.0);
 	}
 	fprintf(F, "\n");
