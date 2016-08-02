@@ -38,6 +38,7 @@ using namespace Phi;
 const long long int M_N = CAL_N(M);
 const long long int R_N = CAL_N(R);
 const long long int V_N = CAL_N(V);
+const long long int A_N = CAL_N(A);
 const long long int CN = M_N * R_N * V_N * V_N * V_N;
 
 
@@ -99,9 +100,9 @@ struct Planet {
 		v *= d;
 		
 		switch(index) {
-		case 0: p.x = 10.0; p.y = 10.0; p.z = 10.0; break;
-		case 1: p.x = -10.0; p.y = 10.0; p.z = 10.0; break;
-		case 2: p.x = 10.0; p.y = 10.0; p.z = -10.0; break;
+		case 0: p.x = 0.0; p.y = 10.0; p.z = 0.0; break;
+		case 1: p.x = -8.6; p.y = -5.0; p.z = 0.0; break;
+		case 2: p.x = 8.6; p.y = -5.0; p.z = 0.0; break;
 		}
 	}
 
