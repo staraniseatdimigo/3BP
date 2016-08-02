@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <math.h>
 
 #include "phi_math.h"
 #include "phi_type.h"
@@ -27,6 +28,9 @@ using namespace Phi;
 #define V_MIN 1.0
 #define V_MAX 3.0
 #define V_STEP 1.0
+#define A_MIN 0.0
+#define A_MAX 5.0
+#define A_STEP 1.0
 
 #define CAL_N(X) ((X##_MAX - X##_MIN) / X##_STEP)
 #define CAL_V(X, N) ((X##_MAX - X##_MIN) / X##_STEP * N + X##_MIN)
@@ -80,14 +84,20 @@ struct Planet {
 		int mn = num % M_N; num /= M_N;
 		int rn = num % R_N; num /= R_N;
 		int v1n = num % V_N; num /= V_N;
-		int v2n = num % V_N; num /= V_N;
-		int v3n = num % V_N; num /= V_N;
+		int v2n = num % A_N; num /= A_N;
+		int v3n = num % A_N; num /= A_N;
 
 		m = CAL_V(M, mn);
-		r = CAL_V(M, rn);
-		v.x = CAL_V(M, v1n);
-		v.y = CAL_V(M, v2n);
-		v.z = CAL_V(M, v3n);
+		r = CAL_V(R, rn);
+		double d = CAL_V(V, v1n);
+		double a1 = 2 * 3.141592 / 6.0 * CAL_V(A, v2n);
+		double a2 = 2 * 3.141592 / 6.0 * (CAL_V(A, v3n) - 3.0);
+		
+		v.x = cos(a1) * cos(a2);
+		v.y = sin(a1) * cos(a2);
+		v.z = sin(a2);
+		v *= d;
+		
 		switch(index) {
 		case 0: p.x = 10.0; p.y = 10.0; p.z = 10.0; break;
 		case 1: p.x = -10.0; p.y = 10.0; p.z = 10.0; break;
