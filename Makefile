@@ -7,7 +7,7 @@ MULTI_OBJS = multi.o phi_math.o phi_type.o
 MULTI_OUT = multi
 
 all: $(MULTI_OBJS) $(OBJS)
-	g++ $(COPT) $(MULTI_OBJS) -o $(MULTI_OUT)
+	g++ $(COPT) -lm $(MULTI_OBJS) -o $(MULTI_OUT)
 	g++ $(COPT) $(OBJS) -o $(OUT)
 
 %.o: %.cpp
