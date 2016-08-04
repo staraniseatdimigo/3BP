@@ -31,11 +31,11 @@ using namespace Phi;
 #define A1_MIN 0.0
 #define A1_MAX 5.0
 #define A1_STEP 1.0
-#define A2_MIN -3.0
-#define A2_MAX 3.0
+#define A2_MIN -1.5
+#define A2_MAX 1.5
 #define A2_STEP 1.0
 
-#define CAL_N(X) ((X##_MAX - X##_MIN) / X##_STEP)
+#define CAL_N(X) ((X##_MAX - X##_MIN) / X##_STEP + 1)
 #define CAL_V(X, N) ((X##_MAX - X##_MIN) / X##_STEP * N + X##_MIN)
 
 const long long int M_N = CAL_N(M);
