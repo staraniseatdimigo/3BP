@@ -28,9 +28,12 @@ using namespace Phi;
 #define V_MIN 1.0
 #define V_MAX 3.0
 #define V_STEP 1.0
-#define A_MIN 0.0
-#define A_MAX 5.0
-#define A_STEP 1.0
+#define A1_MIN 0.0
+#define A1_MAX 5.0
+#define A1_STEP 1.0
+#define A2_MIN -3.0
+#define A2_MAX 3.0
+#define A2_STEP 1.0
 
 #define CAL_N(X) ((X##_MAX - X##_MIN) / X##_STEP)
 #define CAL_V(X, N) ((X##_MAX - X##_MIN) / X##_STEP * N + X##_MIN)
@@ -38,8 +41,9 @@ using namespace Phi;
 const long long int M_N = CAL_N(M);
 const long long int R_N = CAL_N(R);
 const long long int V_N = CAL_N(V);
-const long long int A_N = CAL_N(A);
-const long long int CN = M_N * R_N * V_N * V_N * V_N;
+const long long int A1_N = CAL_N(A1);
+const long long int A2_N = CAL_N(A2);
+const long long int CN = M_N * R_N * V_N * A1_N * A2_N;
 
 
 char drafter[256];
@@ -85,14 +89,14 @@ struct Planet {
 		int mn = num % M_N; num /= M_N;
 		int rn = num % R_N; num /= R_N;
 		int v1n = num % V_N; num /= V_N;
-		int v2n = num % A_N; num /= A_N;
-		int v3n = num % A_N; num /= A_N;
+		int v2n = num % A1_N; num /= A1_N;
+		int v3n = num % A2_N; num /= A2_N;
 
 		m = CAL_V(M, mn);
 		r = CAL_V(R, rn);
 		double d = CAL_V(V, v1n);
-		double a1 = 2 * 3.141592 / 6.0 * CAL_V(A, v2n);
-		double a2 = 2 * 3.141592 / 6.0 * (CAL_V(A, v3n) - 3.0);
+		double a1 = 2 * 3.141592 / 6.0 * CAL_V(A1, v2n);
+		double a2 = 2 * 3.141592 / 6.0 * CAL_V(A2, v3n);
 		
 		v.x = cos(a1) * cos(a2);
 		v.y = sin(a1) * cos(a2);
