@@ -31,8 +31,8 @@ using namespace Phi;
 #define A1_MIN 0.0
 #define A1_MAX 5.0
 #define A1_STEP 1.0
-#define A2_MIN -1.5
-#define A2_MAX 1.5
+#define A2_MIN -1.0
+#define A2_MAX 1.0
 #define A2_STEP 1.0
 
 #define CAL_N(X) ((X##_MAX - X##_MIN) / X##_STEP + 1)
